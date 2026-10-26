@@ -110,7 +110,8 @@
       return;
     }
     main.innerHTML = `<h1>Incidents</h1>
-      <p class="lede">Posts being watched for pile-ons. Each line is the activity around one post; the sharp peaks are what we look into.</p>
+      <p class="lede">Posts being watched for pile-ons. Each line is the activity around one post; the sharp peaks are what we look into.
+        Seeing one happen? <a href="${esc(repo)}/issues/new?template=watch-request.yml">Suggest a post to watch</a>.</p>
       <ul class="incidents">${index.incidents.map((i) => {
         const hot = i.summary.assessment === "coordination signals present";
         return `<li><a class="strip" href="#/incident/${esc(i.id)}">
@@ -233,6 +234,8 @@
         <li>Every score links to the posts behind it.</li>
         <li>Everyone else appears in incident pages as "unlisted account". Their history is encrypted and not published.</li>
       </ul>
+      <h2>Suggesting a post</h2>
+      <p>Anyone can <a href="${esc(repo)}/issues/new?template=watch-request.yml">suggest a post to watch</a>. A maintainer reviews each suggestion before anything is tracked, so the tool can't be pointed at people automatically.</p>
       <h2>Think we got it wrong?</h2>
       <p><a href="${esc(repo)}/issues/new?template=dispute.yml">Open a dispute</a>. Listings removed after review stay removed.</p>
       <p>The full method, thresholds, and code are in the <a href="${esc(repo)}">public repository</a>.</p></div>`;

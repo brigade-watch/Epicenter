@@ -84,9 +84,26 @@ Add it to `config/watchlist.json` and push:
 ```
 
 `type` can also be `url` for any link (an article, a video). That tracks where the link is
-being shared on Bluesky. Visitors can suggest targets with the **Watch request** issue form.
+being shared on Bluesky.
 
 Keep `note` neutral ("Post about the city council vote"), not an accusation.
+
+### Approving suggestions from visitors
+
+Visitors suggest posts with the **Watch request** issue form (linked from the site). To
+approve one:
+
+1. Check the link and the reason. Don't approve posts submitted to target the people who
+   reply to them.
+2. Edit the issue title to a short, neutral description. It becomes the public note.
+3. Add the `approved` label.
+
+The **Approve watch request** workflow then adds it to the watchlist, starts a collection
+run, comments, and closes the issue. Only people with triage access or above can add
+labels, so only maintainers can approve.
+
+First-time setup: Actions tab → **Approve watch request** → **Run workflow** once to
+create the `watch-request`, `approved`, and `dispute` labels.
 
 ## Handling disputes
 

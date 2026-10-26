@@ -1,0 +1,84 @@
+name: Approve watch request
+
+# Add the `approved` label to a `watch-request` issue and the post is added to
+# config/watchlist.json, a collection run starts, and the issue is closed.
+# Only people with triage access or above can add labels, so only maintainers
+# can approve. Edit the issue title to a neutral description first: it becomes
+# the public note on the site.
+#
+# Run this workflow once by hand ("Run workflow") to create the labels.
+
+on:
+  issues:
+    types: [labeled]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+  actions: write
+
+concurrency:
+  group: collect
+  cancel-in-progress: false
+
+jobs:
+  labels:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+    steps:
+      - run: |
+          gh label create watch-request --color 1f7a5c --description "Suggested post to watch" --force
+          gh label create approved --color 2741a8 --description "Maintainer approved: adds to the watchlist" --force
+          gh label create dispute --color b3245c --description "Dispute of an account listing" --force
+
+  approve:
+    if: >-
+      github.event_name == 'issues' &&
+      github.event.label.name == 'approved' &&
+      contains(github.event.issue.labels.*.name, 'watch-request')
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      ISSUE: ${{ github.event.issue.number }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - id: add
+        run: python -m epicenter.approve
+
+      - name: Commit and start a run
+        if: steps.add.outputs.result == 'added'
+        env:
+          NOTE: ${{ steps.add.outputs.note }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add config/watchlist.json
+          git commit -m "Watch: $NOTE (#$ISSUE)"
+          git pull --rebase origin main
+          git push
+          gh workflow run collect.yml --ref main
+          gh issue comment "$ISSUE" --body "Added to the watchlist. Results will appear on the site after the next run, usually within a few minutes, and the post will be rechecked every 6 hours for 14 days."
+          gh issue close "$ISSUE" --reason completed
+
+      - name: Already watched
+        if: steps.add.outputs.result == 'duplicate'
+        run: |
+          gh issue comment "$ISSUE" --body "This link is already on the watchlist."
+          gh issue close "$ISSUE" --reason completed
+
+      - name: No usable link
+        if: steps.add.outputs.result == 'invalid'
+        run: |
+          gh issue comment "$ISSUE" --body "I couldn't find a valid https link in the **Link** field. Edit the issue so it has one, then add the \`approved\` label again."
+          gh issue edit "$ISSUE" --remove-label approved
