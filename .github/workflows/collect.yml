@@ -6,7 +6,7 @@ on:
   workflow_dispatch:          # "Run workflow" button in the Actions tab
   push:
     branches: [main]
-    paths: ["site/**", "config/**", "epicenter/**"]
+    paths: ["site/**", "config/**", "epicenter/**", ".github/workflows/**"]
 
 permissions:
   contents: write   # commit updated data/
@@ -22,6 +22,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: main   # always start from the latest data, even when re-running an old run
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -49,6 +51,7 @@ jobs:
             echo "No data changes."
           else
             git commit -m "Update data $(date -u +%Y-%m-%dT%H:%MZ)"
+            git pull --rebase origin main
             git push
           fi
 
