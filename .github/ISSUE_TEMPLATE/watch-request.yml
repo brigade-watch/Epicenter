@@ -1,0 +1,32 @@
+name: Watch request
+description: Suggest a post or link to watch for a pile-on
+title: "Watch: "
+labels: ["watch-request"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Right now we can trace activity on **Bluesky**. For a link to something elsewhere
+        (a news article, a YouTube video), we can track where it's being shared on Bluesky.
+        Please don't include anyone's personal information.
+  - type: input
+    id: url
+    attributes:
+      label: Link
+      description: A Bluesky post (https://bsky.app/profile/…/post/…) or any public link
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: What are you seeing?
+      description: Timing, where you think it started, anything that looks copy-pasted
+    validations:
+      required: true
+  - type: checkboxes
+    id: ack
+    attributes:
+      label: Before you submit
+      options:
+        - label: The link is public, and I haven't included private information about anyone.
+          required: true

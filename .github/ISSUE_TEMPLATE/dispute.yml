@@ -1,0 +1,33 @@
+name: Dispute a listing
+description: Tell us an account was listed by mistake
+title: "Dispute: "
+labels: ["dispute"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Every listing links to the posts behind it. If you think those posts don't show
+        coordination (for example, you replied on your own and happened to use common wording),
+        explain below. Listings removed after review stay removed.
+  - type: input
+    id: handle
+    attributes:
+      label: Account handle
+      placeholder: "@example.bsky.social"
+    validations:
+      required: true
+  - type: textarea
+    id: explanation
+    attributes:
+      label: What did we get wrong?
+    validations:
+      required: true
+  - type: dropdown
+    id: relation
+    attributes:
+      label: Your connection to the account
+      options:
+        - It's my account
+        - Someone else's account
+    validations:
+      required: true

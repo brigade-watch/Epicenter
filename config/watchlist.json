@@ -1,0 +1,4 @@
+{
+  "_how_to": "Add one entry per target. type is 'bluesky_post' (a bsky.app post URL) or 'url' (any link; tracks where it's shared on Bluesky). Targets stop updating track_days after 'added'.",
+  "targets": []
+}
