@@ -1,4 +1,13 @@
 {
   "_how_to": "Add one entry per target. type is 'bluesky_post' (a bsky.app post URL) or 'url' (any link; tracks where it's shared on Bluesky). Targets stop updating track_days after 'added'.",
-  "targets": []
+  "targets": [
+    {
+      "type": "bluesky_post",
+      "url": "https://bsky.app/profile/rickbrew.bsky.social/post/3muiv4pheo22g",
+      "note": "test",
+      "added": "2026-10-27",
+      "track_days": 14,
+      "request": 1
+    }
+  ]
 }
